@@ -1,0 +1,9 @@
+<launch>
+  <arg name="robot_name"/>
+  <arg name="init_pose" default="-x 0 -y 0 -z 0.05"/>
+  <rosparam file="$(find bringup)/param/wheelbase.yaml" command="load" />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" />
+
+  <node name="$(arg robot_name)_racer_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model racecar $(arg init_pose)" />
+  
+ </launch> 

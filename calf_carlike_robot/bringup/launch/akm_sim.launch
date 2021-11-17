@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+    <!--<arg name="world_name" default="room2" />-->
+    <arg name="world_name" default="yjy" />
+    <arg name="gui" default="true" />
+    <arg name="run_camera" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(find bringup)/worlds/$(arg world_name).world"/>
+      <arg name="gui" value="$(arg gui)"/>
+    </include>
+    
+    <group ns="AKM_1">
+        <!-- <node pkg="racecar_control" type="nav_sim.py" name="nav_sim_control" /> -->
+        <rosparam file="$(find bringup)/param/wheelbase.yaml" command="load" />
+        <param name="robot_description" command="$(find xacro)/xacro $(find racecar_description)/urdf/racecar.xacro" />
+        
+        <node name="racecar_spawn" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model AKM_1 -param robot_description -z 0.05" />
+        
+        <include file="$(find racecar_control)/launch/racecar_control_tjh.launch">
+            <arg name="robot_name" value="AKM_1"/>
+        </include>
+        
+    </group>
+    <include file="$(find racecar_gazebo)/launch/pose_ac.launch"/>
+    
+    <node name="rviz" pkg="rviz" type="rviz"  />
+
+</launch>
+    
